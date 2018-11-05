@@ -138,6 +138,7 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	UPROPERTY(BlueprintReadOnly, Category = Blueprints)
 	bool isCarryingObjective;
 };
 
