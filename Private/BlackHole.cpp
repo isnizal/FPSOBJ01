@@ -16,12 +16,21 @@ ABlackHole::ABlackHole()
 	SphereComp = CreateDefaultSubobject<USphereComponent>(FName("SphereComponents"));
 	SphereComp->SetSphereRadius(50);
 	SphereComp->SetupAttachment(MeshComp);
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ABlackHole::OverlapInnerSphere);
 
 	OuterSphereComp = CreateDefaultSubobject<USphereComponent>(FName("OuterSphereComponents"));
 	OuterSphereComp->SetSphereRadius(3000);
 	OuterSphereComp->SetupAttachment(MeshComp);
 
 }
+void ABlackHole::OverlapInnerSphere(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (OtherActor)
+	{
+		OtherActor->Destroy();
+	}
+}
+
 
 // Called when the game starts or when spawned
 void ABlackHole::BeginPlay()
@@ -35,5 +44,16 @@ void ABlackHole::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	TArray<UPrimitiveComponent*> OverlapComps;
+	OuterSphereComp->GetOverlappingComponents(OverlapComps);
+
+	for (int i = 0; i < OverlapComps.Num(); i++)
+	{
+		UPrimitiveComponent *PrimComp = OverlapComps[i];
+		if (PrimComp && PrimComp->IsSimulatingPhysics())
+		{
+			float scaledRadius = OuterSphereComp->GetScaledSphereRadius();
+		}
+	}
 }
 

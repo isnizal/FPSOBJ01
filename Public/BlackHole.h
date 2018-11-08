@@ -19,6 +19,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void OverlapInnerSphere(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 public:	
 	// Called every frame
@@ -27,6 +28,7 @@ public:
 	UStaticMeshComponent * MeshComp;
 	UPROPERTY(EditDefaultsOnly, Category = Component)
 	USphereComponent * SphereComp;
+	UPROPERTY(EditDefaultsOnly, Category = Component)
 	USphereComponent * OuterSphereComp;
 	
 
