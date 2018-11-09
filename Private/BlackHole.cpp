@@ -53,6 +53,9 @@ void ABlackHole::Tick(float DeltaTime)
 		if (PrimComp && PrimComp->IsSimulatingPhysics())
 		{
 			float scaledRadius = OuterSphereComp->GetScaledSphereRadius();
+			float ForceStrength = -5000;
+
+			PrimComp->AddRadialForce(GetActorLocation(), scaledRadius, ForceStrength, ERadialImpulseFalloff::RIF_Constant, true);
 		}
 	}
 }
