@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include"Classes/Components/SphereComponent.h"
+#include"Classes/Components/MeshComponent.h"
 #include "BlackHole.generated.h"
 
 UCLASS()
@@ -25,11 +26,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UPROPERTY(EditAnywhere, Category = Component)
+	UPROPERTY(VisibleAnywhere, Category = Component)
 	UStaticMeshComponent * MeshComp;
-	UPROPERTY(EditDefaultsOnly, Category = Component)
-	USphereComponent * SphereComp;
-	UPROPERTY(EditDefaultsOnly, Category = Component)
+	UPROPERTY(VisibleAnywhere, Category = Component)
+	USphereComponent * InnerSphereComp;
+	UPROPERTY(VisibleAnywhere, Category = Component)
 	USphereComponent * OuterSphereComp;
 	
 
