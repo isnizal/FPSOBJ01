@@ -20,19 +20,24 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	//declare function for overlap prim component
 	UFUNCTION()
-	void OverlapInnerSphere(UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	void OverlapInnerSphere(UPrimitiveComponent *OverlapComp, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	void Tick(float DeltaTime);
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	UPROPERTY(VisibleAnywhere, Category = Component)
-	UStaticMeshComponent * MeshComp;
-	UPROPERTY(VisibleAnywhere, Category = Component)
-	USphereComponent * InnerSphereComp;
-	UPROPERTY(VisibleAnywhere, Category = Component)
-	USphereComponent * OuterSphereComp;
-	
+
+	//declare variable innersphere
+	UPROPERTY(VisibleAnywhere, Category = Components)
+		USphereComponent * InnerSphereComp;
+	//declare variable outersphere
+	UPROPERTY(VisibleAnywhere, Category = Components)
+		USphereComponent * OuterSphereComp;
+	//declare variable mesh component
+	UPROPERTY(VisibleAnywhere, Category = Components)
+		UStaticMeshComponent * MeshComp;
 
 	
 	

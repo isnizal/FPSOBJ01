@@ -11,28 +11,28 @@ ABlackHole::ABlackHole()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Create mesh comp 
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(FName("MeshComp"));
-	//set collision enabled false
-	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//Set mesh comp as root component
+	//create object meshcomponent
+	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(FName("Mesh Components"));
+	//assign as root component
 	RootComponent = MeshComp;
+	//set the mesh component to collision enable
+	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	//create inner sphere
-	InnerSphereComp = CreateDefaultSubobject<USphereComponent>(FName("SphereComp"));
-	//set inner sphere radius
+	//create object innersphere
+	InnerSphereComp = CreateDefaultSubobject<USphereComponent>(FName("Inner Sphere"));
+	//set radius inner sphere to be 50
 	InnerSphereComp->SetSphereRadius(50);
-	//attach to the mesh comp
+	//set up as mesh comp root objects
 	InnerSphereComp->SetupAttachment(MeshComp);
-	//set inner sphere to become overlap sphere
-	InnerSphereComp->OnComponentBeginOverlap.AddDynamic(this ,&ABlackHole::OverlapInnerSphere);
+	//set to be overlap to destroy any primitive
+	InnerSphereComp->OnComponentBeginOverlap.AddDynamic(this, &ABlackHole::OverlapInnerSphere);
 
-	//create outer sphere
-	OuterSphereComp = CreateDefaultSubobject<USphereComponent>(FName("OuterSphereComp"));
-	//attach to mesh comp
-	OuterSphereComp->SetupAttachment(MeshComp);
-	//set outer sphere radius
+	//create object overlap innersphere
+	OuterSphereComp = CreateDefaultSubobject<USphereComponent>(FName("Out Sphere"));
+	//set the radius to 5000
 	OuterSphereComp->SetSphereRadius(5000);
+	//set up overlap as attach to mesh comp root
+	OuterSphereComp->SetupAttachment(MeshComp);
 	
 
 
@@ -46,7 +46,7 @@ void ABlackHole::BeginPlay()
 	
 }
 
-void ABlackHole::OverlapInnerSphere(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+void ABlackHole::OverlapInnerSphere(UPrimitiveComponent *OverlapComp, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	if (OtherActor)
 	{
@@ -55,30 +55,29 @@ void ABlackHole::OverlapInnerSphere(UPrimitiveComponent * OverlappedComponent, A
 }
 
 
+
 // Called every frame
 void ABlackHole::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//Set declaring array of primitive component name overlapcomp
-	TArray<UPrimitiveComponent*>OverlapComp;
-	//Get outersphere to set with array of primitive component overlap
-	OuterSphereComp->GetOverlappingComponents(OverlapComp);
-	//Get loop through the array with overlap comp number
-	for (int i = 0; i < OverlapComp.Num(); i++)
-	{
-		//Set the overlap comp looping of i with the primitive component
-		UPrimitiveComponent * PrismComp = OverlapComp[i];
-		//check to find if it simulating
-		if (PrismComp && PrismComp->IsSimulatingPhysics())
-		{
-			//declaring variables float
-			float AddForce = -5000;
-			float GetRadius = OuterSphereComp->GetScaledSphereRadius();
-			//adding the looping of overla component to add force
-			PrismComp->AddRadialForce(GetActorLocation(), GetRadius, AddForce, ERadialImpulseFalloff::RIF_Constant, true);
+	//declare array of primitive overlap comp
+	TArray<UPrimitiveComponent*>OverlapComps;
+	//get the outer sphere component overlap to the overlap of array
+	OuterSphereComp->GetOverlappingComponents(OverlapComps);
+	//make loop for the overlap primitiv number
+	for (int i = 0; i < OverlapComps.Num(); i++) {
+		//declare new primitive component to be the overlap of primitive
+		UPrimitiveComponent * PrimComp = OverlapComps[i];
+		//declare branch of the prim to check is it simulate
+		if (PrimComp &&PrimComp->IsSimulatingPhysics()) {
+			//get the sphere radius of the outer sphere
+			float GetOutSphere = OuterSphereComp->GetScaledSphereRadius();
+			//declare float var to add force
+			float AddForce = -5000.0f;
+			//set the outer sphe to add radial force
+			PrimComp->AddRadialForce(GetActorLocation(), GetOutSphere, AddForce, ERadialImpulseFalloff::RIF_MAX, true);
 		}
 	}
-
 
 }
 
