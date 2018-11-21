@@ -6,14 +6,13 @@
 // Sets default values
 AExtractionZone::AExtractionZone()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 	OverlapComp = CreateDefaultSubobject<UBoxComponent>(FName("Box Component"));
-	OverlapComp->SetBoxExtent(FVector(200.0f));
+	OverlapComp->SetBoxExtent(FVector(100));
 	OverlapComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	OverlapComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	OverlapComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	OverlapComp->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	RootComponent = OverlapComp;
+	OverlapComp->SetHiddenInGame(false);
 
 	OverlapComp->OnComponentBeginOverlap.AddDynamic(this, &AExtractionZone::OverlapBox);
 
@@ -22,20 +21,9 @@ AExtractionZone::AExtractionZone()
 
 void AExtractionZone::OverlapBox(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Being extract"));
-}
-
-// Called when the game starts or when spawned
-void AExtractionZone::BeginPlay()
-{
-	Super::BeginPlay();
+	if (OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Being extract"));
+	}
 	
 }
-
-// Called every frame
-void AExtractionZone::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
