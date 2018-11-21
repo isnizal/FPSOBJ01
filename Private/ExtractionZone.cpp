@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ExtractionZone.h"
+#include"Classes/Components/DecalComponent.h"
 
 
 // Sets default values
@@ -16,6 +17,10 @@ AExtractionZone::AExtractionZone()
 
 	OverlapComp->OnComponentBeginOverlap.AddDynamic(this, &AExtractionZone::OverlapBox);
 
+	DecalComp = CreateDefaultSubobject<UDecalComponent>(FName("Decal Component"));
+	DecalComp->DecalSize = FVector(100, 100, 100);
+
+	DecalComp->SetupAttachment(RootComponent);
 
 }
 
